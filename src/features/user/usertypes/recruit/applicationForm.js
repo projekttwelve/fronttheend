@@ -23,6 +23,19 @@ const state = useSelector(stateSelector);
       console.log('failed, state = ' + state.status)
     }
   },[setList. list, dispatch]);
+  const handleSubmit = (values) =>{
+    const jobslist =  list.map((job) => values.jobs.includes(job) ? job : " ").filter((job)=> job != " ");
+    const exp = values.experience.filter((exp)=> exp != null);
+
+    const res = {
+      jobs:jobslist,
+      experience: exp,
+      startDate: values.startDate,
+      endDate: values.endDate
+    }
+    alert(JSON.stringify(res, null, 2))
+  }
+
   if(list && state.status === "success"){
   return(
   <div>
@@ -31,37 +44,37 @@ const state = useSelector(stateSelector);
     <PersonalInformation/>
     <h2>Competens profile: </h2>
   <Formik initialValues={{
-    ticketsales : { experience: false, years: 0 },
-    lotteries: { experince: false, years: 0 },
-    rollerCosterOp: { experience: false, years: 0 },
+    jobs: [],
+    experience: [],
     startDate: "",
     endDate: ""
-  }} onSubmit={(values)=>{alert(JSON.stringify(values, null, 2))}}>
+  }} onSubmit={handleSubmit}>
       <Form>
         <div>experiences</div>
         <div>
             <label>
-    <Field type="checkbox" name="ticketsales[experience]" />
+    <Field  type="checkbox" name="jobs" value="ticket sales"/>
               {list[0]}
             </label>
           <label> &nbsp; years of experience
-              <Field type="number" name="ticketsales[years]"/>
+              <Field type="number"  name="experience[0]" />
             </label>
     </div>
     <div>
             <label>
-              <Field type="checkbox" name="lotteries[experience]"/>
+              <Field type="checkbox" name="jobs" value="lotteries"/>
                {list[1]}
               &nbsp; years of experience
-              <Field type="number" name="lotteries[years]"/>
+              <Field type="number"  name="experience[1]"/>
             </label>
     <div/>
     <div>
             <label>
-              <Field type="checkbox" name="rollerCosterOp[experience]"  />
+              <Field type="checkbox" name="jobs" value="roller coaster operation" />
               {list[2]}
               &nbsp; years of experience
-              <Field type="number" name="rollerCosterOp[years]" />
+              <Field type="number"  name="experience[2]" />
+
             </label>
     </div>
     </div>
