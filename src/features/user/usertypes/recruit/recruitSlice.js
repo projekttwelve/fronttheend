@@ -14,10 +14,23 @@ export const getCompetenceList = createAsyncThunk('recruit/getCompetence',async 
   }
 })
 
+export const postApplication = createAsyncThunk('recruit/poastApp', async(appl, thunkAPI)=>{
+  try{
+    const res = await userService.postApplication(appl);
+    return res;
+  }catch(err){
+    throw new Error(err);
+  }
+})
+
 const initialState = {
   list: null,
   status: 'idle',
-  errorMsg: ' '
+  errorMsg: ' ',
+  posted:{
+    status: 'idle',
+    res: null
+  }
 }
 
 export const recruitSlice = createSlice({
@@ -35,7 +48,18 @@ export const recruitSlice = createSlice({
     state.status = 'error';
       state.errorMsg = state.payload.data;
     }
-  }
+  },
+  [postApplication.pending]: (state, action)=>{
+    state.posted.status = "pending";
+  },
+  [postApplication.fullfiled]: (state, action)=>{
+    state.posted.status = "success";
+    state.posted.res = state.payload.data;
+  },
+   [postApplication.rejected]: (state, action)=>{
+    state.posted = "rejected";
+    state.posted.res = state.payload.data;
+  },
 })
 export const stateSelector = (state) => state.recruit;
 export default recruitSlice.reducer;

@@ -8,10 +8,18 @@
  * return HTTP authorization, else return empty object.
  *
  * */
-export default function authHeader() {
+export const authHeader =()=> {
   const user = JSON.parse(localStorage.getItem('user'));
   if (user && user.jwtToken) {
     return { Authorization: 'Bearer ' + user.jwtToken };
+  } else {
+    return {};
+  }
+}
+export const authHeaderW =(arg)=> {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user && user.jwtToken) {
+    return { Authorization: 'Bearer ' + user.jwtToken, arg };
   } else {
     return {};
   }

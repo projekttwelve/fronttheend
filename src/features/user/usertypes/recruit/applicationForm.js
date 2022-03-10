@@ -4,7 +4,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form, Field, FieldArray } from 'formik';
 import { stateSelector } from './recruitSlice'
 import { PersonalInformation } from './PersonalInformation'
-import { getCompetenceList } from './recruitSlice';
+import { getCompetenceList, postApplication } from './recruitSlice';
 export const ApplicationForm = () =>{
 
 const [approved, setApproved] = useState(false);
@@ -33,7 +33,8 @@ const state = useSelector(stateSelector);
       startDate: values.startDate,
       endDate: values.endDate
     }
-    alert(JSON.stringify(res, null, 2))
+    //alert(JSON.stringify(res, null, 2))
+    dispatch(postApplication(res));
   }
 
   if(list && state.status === "success"){

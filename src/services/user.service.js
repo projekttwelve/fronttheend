@@ -6,7 +6,8 @@
  *
  */
 import axios from 'axios';
-import authHeader from './auth-headers';
+import {authHeaderW, authHeader} from './auth-headers';
+
 const API_URL = 'https://mycorsproxy123.herokuapp.com/https://obscure-tundra-74753.herokuapp.com';
 
   const getRecruitPage = ()=> {
@@ -20,10 +21,21 @@ const getCompetenceList = () =>{
     return axios.get(API_URL + "/api/competence/", {headers: authHeader()})
 }
 
+const postApplication = async (appl) =>{
+  return await axios.post(API_URL + "/api/uploadApp",
+         { headers: authHeaderW({'X-Requested-With': 'XMLHttpRequest'}), body: appl })
+}
+
+const getApplications = (startDate, endDate) =>{
+  return axios.get(API_URL + "/api/available", { params: { startDate, endDate } })
+}
+
 const userService ={
   getRecruitPage,
   getRecruiterPage,
-  getCompetenceList
+  getCompetenceList,
+  postApplication,
+  getApplications
 }
 
 export default userService;
