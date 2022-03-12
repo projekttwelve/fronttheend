@@ -6,12 +6,12 @@
  *
  */
 import axios from 'axios';
-import {authHeaderW, authHeader} from './auth-headers';
+import {authHeaderex, authHeader} from './auth-headers';
 
 const API_URL = 'https://obscure-tundra-74753.herokuapp.com';
 
   const getRecruitPage = ()=> {
-    return axios.get(API_URL + "/auth/user/recruit", {headers: authHeader()})
+    return axios.get(API_URL + "/auth/user/recruit", {headers: authHeaderex()})
   }
 const getRecruiterPage = ()=> {
     return axios.get(API_URL + "/auth/user/recruiter", {headers: authHeader()})
@@ -23,7 +23,7 @@ const getCompetenceList = () =>{
 
 const postApplication = async (appl) =>{
   return await axios.post(API_URL + "/api/uploadApp",
-                          { headers: authHeaderW(),  appl })
+                          { headers: authHeader(),  appl })
 }
 
 const getApplications = (startDate, endDate) =>{
