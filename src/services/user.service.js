@@ -18,11 +18,11 @@ const getRecruiterPage = ()=> {
   }
 
 const getCompetenceList = () =>{
-    return axios.get("https://obscure-tundra-74753.herokuapp.com/api/competence/", {headers: authHeaderW()})
+    return axios.get(API_URL + "/api/competence/", {headers: authHeaderW()})
 }
 
 const postApplication = async (appl) =>{
-  return await axios.post( API_URL + "/api/uploadApp",
+  return await axios.post(  "https://obscure-tundra-74753.herokuapp.com/api/uploadApp",
                           { headers: authHeaderW(),  appl })
 }
 
