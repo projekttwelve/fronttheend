@@ -16,10 +16,19 @@ export const authHeader =()=> {
     return {};
   }
 }
-export const authHeaderW =(arg)=> {
+export const authHeaderW =()=> {
   const user = JSON.parse(localStorage.getItem('user'));
   if (user && user.jwtToken) {
-    return { Authorization: 'Bearer ' + user.jwtToken, arg };
+    return { Authorization: 'Bearer ' + user.jwtToken,   'X-Requested-With': 'XMLHttpRequest'};
+  } else {
+    return {};
+  }
+}
+export const authHeaderZ =()=> {
+  const user = JSON.parse(localStorage.getItem('user'));
+  if (user && user.jwtToken) {
+    return { Authorization: 'Bearer ' + user.jwtToken,
+             'Access-Control-Allow-Origin': 'https://safe-fjord-62405.herokuapp.com/ '}
   } else {
     return {};
   }
