@@ -82,7 +82,9 @@ useEffect(()=>{
       pnr,
       email,
       password,
-      username}))
+      username,
+      role_id: 2
+                         }))
 
   }
 
