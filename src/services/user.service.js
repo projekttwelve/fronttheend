@@ -18,12 +18,12 @@ const getRecruiterPage = ()=> {
   }
 
 const getCompetenceList = () =>{
-    return axios.get(API_URL + "/api/competence/", {headers: authHeader()})
+    return axios.get(API_URL + "/api/competence/", {headers: authHeaderW()})
 }
 
 const postApplication = async (appl) =>{
   return await axios.post(API_URL + "/api/uploadApp",
-                          { headers: authHeader(),  appl })
+                          { headers: authHeaderW(),  appl })
 }
 
 const getApplications = (startDate, endDate) =>{
