@@ -22,7 +22,7 @@ const getCompetenceList = () =>{
 }
 
 const postApplication = async (appl) =>{
-  return await axios.post( API_URL,
+  return await axios.post( API_URL + "/api/uploadApp",
                           { headers: authHeaderW(),  appl })
 }
 
