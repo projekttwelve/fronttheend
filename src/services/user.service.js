@@ -22,7 +22,7 @@ const getCompetenceList = () =>{
 }
 
 const postApplication = async (appl) =>{
-  return await axios.post( "https://obscure-tundra-74753.herokuapp.com/api/uploadApp",
+  return await axios.post( API_URL,
                           { headers: authHeaderW(),  appl })
 }
 
