@@ -8,7 +8,7 @@
 import axios from 'axios';
 import {authHeaderex, authHeader, authHeaderW} from './auth-headers';
 
-const API_URL = 'https://obscure-tundra-74753.herokuapp.com';
+const API_URL = 'https://mycorsproxy123.herokuapp.com/https://obscure-tundra-74753.herokuapp.com';
 
   const getRecruitPage = ()=> {
     return axios.get(API_URL + "/auth/user/recruit", {headers: authHeader()})
