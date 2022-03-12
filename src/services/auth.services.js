@@ -15,7 +15,7 @@ const signUp = async (info) =>{
 }
 
 const signIn = async (credentials) =>{
-   const res = await axios.post(API_URL, credentials)
+  const res = await axios.post(API_URL, credentials,{ headers: {'X-Requested-With': 'XMLHttpRequest'} })
     if(res.data){
       localStorage.setItem("user", JSON.stringify(res.data))
      // sessionStorage.setItem('jwt', res.data.jwt)
