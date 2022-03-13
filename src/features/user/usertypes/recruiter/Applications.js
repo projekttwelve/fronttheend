@@ -44,7 +44,7 @@ export const ApplicationsList = () =>{
       {content &&
           (<div>
                  {content.map((item)=>{
-                     <div>${item}</div>
+                  return   <div>${item}</div>
                  })}
                  </div>)
       }
