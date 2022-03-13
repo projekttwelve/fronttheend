@@ -15,14 +15,14 @@ export const ApplicationsList = () =>{
         }
     },[ content, setContent])
 
-     const addStart = (date) =>{
-         setPeriod({...state, endDate: date})
-         console.log('sdate: ' + date)
+    const addStart = (e.target.value) =>{
+        setPeriod({...state, endDate: e.target.value})
+         console.log('sdate: ')
      }
 
-    const addEnd = (date) =>{
-         setPeriod({...state, startDate: date})
-        console.log('enddate: ' + date)
+    const addEnd = (e.target.value) =>{
+         setPeriod({...state, startDate: e.target.value})
+        console.log('enddate')
     }
 
     const handleSubmit = () =>{
@@ -35,10 +35,10 @@ export const ApplicationsList = () =>{
              provide us with the dates for that period.</p>
 
         <label >start date: </label>
-        <input name="startDate" type="date"/>
+        <input name="startDate" type="date" onChange={addEnd}>
       <div>
         <label> end date: </label>
-        <input name="endDate" type="date" onChange={addEnd((e)=> e.value)}/>
+        <input name="endDate" type="date" onChange={addEnd}/>
         </div>
            <button type="submit" onSubmit={handleSubmit}>Submit</button>
       {content &&
