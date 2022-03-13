@@ -42,7 +42,7 @@ const recruiterNavbar = () =>{
     <nav>
       <div className='containter'>
         <ul>
-          <li><NavLink to='/application'>Application Forms</NavLink></li>
+          <li><NavLink to='/applications'>Application Forms</NavLink></li>
           <li><NavLink to='/UserRecruit'>{currentUser.name}</NavLink></li>
           <li><a href='/SignIn' onClick={handleLogOut}>Log out</a></li>
         </ul>
