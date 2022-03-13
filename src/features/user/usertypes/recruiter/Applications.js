@@ -38,12 +38,12 @@ export const ApplicationsList = () =>{
         <input name="endDate" type="date" onChange={addEnd((e)=> e.value)}/>
         </div>
            <button type="submit" onSubmit={handleSubmit}>Submit</button>
-      {if(content){
+      {content &&
           (<div>
                  {content.map((item)=>{
                      <div>${item}</div>
                  })}
                  </div>)
-      }}
+      }
     </div>);
 }
