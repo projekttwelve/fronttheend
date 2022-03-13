@@ -44,7 +44,7 @@ const dispatch = useDispatch();
            </div>)
   }
   return(<div>
-           <h1>Recruit profile page</h1>
+           <h1>Profile page</h1>
            {currentUser.roleid == 1 ?  renderRecruiter() : renderRecruit() }
            <button onClick={handleLogout}>logout</button>
          </div>)
