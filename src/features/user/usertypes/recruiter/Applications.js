@@ -17,17 +17,17 @@ export const ApplicationsList = () =>{
 
      const addStart = (date) =>{
          setPeriod({...state, endDate: date})
-         console.log('sdate: ' date)
+         console.log('sdate: ' + date)
      }
 
     const addEnd = (date) =>{
          setPeriod({...state, startDate: date})
-        console.log('enddate: ' date)
+        console.log('enddate: ' + date)
     }
 
     const handleSubmit = () =>{
         dispatch(getApplications(period));
-        console.log('period: ' period)
+        console.log('period: ' + period)
     }
   return(
     <div>
