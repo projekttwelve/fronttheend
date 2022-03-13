@@ -46,7 +46,7 @@ export const recruitSlice = createSlice({
     },
     [getCompetenceList.rejected]: (state, action)=>{
     state.status = 'error';
-      state.errorMsg = state.payload.data;
+      state.errorMsg = action.payload.data;
     }
   },
   [postApplication.pending]: (state, action)=>{
