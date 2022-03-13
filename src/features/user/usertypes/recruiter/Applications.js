@@ -39,7 +39,7 @@ export const ApplicationsList = () =>{
         </div>
            <button type="submit" onSubmit={handleSubmit}>Submit</button>
       {if(content){
-          retrun(<div>
+          (<div>
                  {content.map((item)=>{
                      <div>${item}</div>
                  })}
