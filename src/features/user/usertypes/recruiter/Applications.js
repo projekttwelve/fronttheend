@@ -15,12 +15,12 @@ export const ApplicationsList = () =>{
         }
     },[ content, setContent])
 
-    const addStart = (e.target.value) =>{
+    const addStart = (e) =>{
         setPeriod({...state, endDate: e.target.value})
          console.log('sdate: ')
      }
 
-    const addEnd = (e.target.value) =>{
+    const addEnd = (e) =>{
          setPeriod({...state, startDate: e.target.value})
         console.log('enddate')
     }
