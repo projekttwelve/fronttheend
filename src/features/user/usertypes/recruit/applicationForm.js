@@ -7,7 +7,7 @@ import { PersonalInformation } from './PersonalInformation'
 import { getCompetenceList, postApplication } from './recruitSlice';
 export const ApplicationForm = () =>{
 
-const [approved, setApproved] = useState(false);
+const [ErrorMsg, setErrorMsg] = useState(" ");
 const [list, setList] = useState([]);
 const dispatch = useDispatch()
 const navigate = useNavigate()
@@ -18,11 +18,10 @@ const state = useSelector(stateSelector);
     if(state.status === 'success'){
       setList(state.list)
       console.log(state.list)
-    }else{
-    //  navigate("/SignIn")
-      console.log('failed, state = ' + state.status)
+    }else if(state.status == 'error'){
+      setErrorMsg(state.errorMsg)
     }
-  },[setList. list, dispatch]);
+  },[setList. list, setErrorMsg]);
   const handleSubmit = (values) =>{
     const jobslist =  list.map((job) => values.jobs.includes(job) ? job : " ").filter((job)=> job != " ");
     const exp = values.experience.filter((exp)=> exp != null);
@@ -91,6 +90,8 @@ const state = useSelector(stateSelector);
 
       </div>
 )
+  }else if(ErrorMsg){
+    return <p style={{color:'red'}} className="error"> {ErrorMsg} </p>
   }else{
     return <p>loading...</p>
   }

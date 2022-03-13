@@ -58,7 +58,7 @@ export const userSlice = createSlice({
          state.isLoggedIn = false;
       },
       [signUpUser.rejected]:(state, action)=>{
-        state.res = action.payload;
+        state.res = action.payload.response.data;
         state.status = 'error';
       },
     [signInUser.pending]:(state, action)=>{
@@ -70,8 +70,8 @@ export const userSlice = createSlice({
       state.isLoggedIn = true;
     },
     [signInUser.rejected]:(state, action)=>{
-      state.status = 'login failed';
-      state.res = action.payload;
+      state.status = 'error';
+      state.res = action.payload.response.data;
       state.isLoggedIn = false;
     },
     [logout.fulfilled]: (state, action)=>{

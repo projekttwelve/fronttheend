@@ -33,7 +33,7 @@ const postApplication = async (appl) =>{
 const getApplications = async({startDate, endDate}) =>{
   const res = await axios.get(API_URL + `/api/available`,  {headers: authHeaderex(), params: { startDate, endDate }}
                              )
-  return res.data.args;
+  return res.data;
 }
 
 const userService ={

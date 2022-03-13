@@ -49,7 +49,7 @@ useEffect(()=>{
       setErrorMsg('');
       navigate("/SignIn")
     }else if(status === 'error'){
-      setErrorMsg(res.message)
+      setErrorMsg(res)
     }
   },[status, errorMsg])
   //TODO: make sure button is only clickable if we filled all values

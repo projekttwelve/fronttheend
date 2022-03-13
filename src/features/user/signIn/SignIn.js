@@ -30,7 +30,8 @@ export function SignIn(){
       navigate("/UserRecruit")
       setErrorMsg('')
     }else if(status === 'error'){
-      setErrorMsg(res.message)
+      setErrorMsg(res)
+      console.log("err: " + errorMsg)
     }
 
   },[errorMsg, isLoggedIn, navigate, res, status])
@@ -42,6 +43,7 @@ export function SignIn(){
   }
 
   return(
+    <div>
     <Formik
       initialValues={credentials}
       validationSchema={validationSchema}
@@ -65,6 +67,10 @@ export function SignIn(){
   </div>
   </Form>
 </Formik>
+{errorMsg && (
+  <p style={{color:'red'}} className="error"> {errorMsg} </p>
+)}
+</div>
   );
 
 }

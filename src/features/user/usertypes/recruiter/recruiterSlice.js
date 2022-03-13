@@ -33,7 +33,7 @@ export const recruiterSlice = createSlice({
     },
     [getApplications.rejected]: (state, action)=>{
     state.status = 'error';
-    state.errorMsg = action.payload;
+      state.errorMsg = action.payload.response.data;
     }
   }
 })
