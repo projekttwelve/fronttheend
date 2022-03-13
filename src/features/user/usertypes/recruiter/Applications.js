@@ -5,7 +5,6 @@ import { getApplications, stateSelector } from './recruiterSlice';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
 export const ApplicationsList = () =>{
-  //  const [period, setPeriod] = useState({startDate: null, endDate: null})
     const [content, setContent] = useState(null)
     const dispatch = useDispatch();
   const [ErrorMsg, setErrorMsg] = useState('');
