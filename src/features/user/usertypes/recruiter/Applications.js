@@ -13,7 +13,7 @@ export const ApplicationsList = () =>{
         if(state.list){
             setContent({content: state.list})
         }
-    },[state.list, content])
+    },[ content, setContent])
 
      const addStart = (date) =>{
          setPeriod({...state, endDate: date})
