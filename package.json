@@ -14,7 +14,11 @@
     "react-router-dom": "^6.2.1",
     "react-scripts": "5.0.0",
     "react-validation": "^3.0.7",
-    "yup": "^0.32.11"
+    "yup": "^0.32.11",
+         "engines": {
+        "node": ">=8",
+        "npm": ">=6",
+        "yarn": ">=1"
   },
   "scripts": {
     "start": "react-scripts start",
