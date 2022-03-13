@@ -2,30 +2,32 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getApplications, stateSelector } from './recruiterSlice';
+import { Formik, Field, Form, ErrorMessage } from "formik";
 
 export const ApplicationsList = () =>{
-    const [period, setPeriod] = useState({startDate: null, endDate: null})
+  //  const [period, setPeriod] = useState({startDate: null, endDate: null})
     const [content, setContent] = useState(null)
     const dispatch = useDispatch();
-    const state = useSelector(stateSelector);
+  const { status, list } = useSelector(stateSelector);
 
     useEffect(()=>{
-        if(state.list){
-            setContent({content: state.list})
+        if(status === 'success'){
+            setContent({content: list})
         }
-    },[ content, setContent])
+    },[ content, setContent, status, list])
 
-    const addStart = (e) =>{
-        setPeriod({...state, endDate: e.target.value})
+ /*   const addStart = (e) =>{
+      setPeriod(state => ({...state, endDate: e.target.value}))
          console.log('sdate: ')
      }
 
     const addEnd = (e) =>{
-         setPeriod({...state, startDate: e.target.value})
+      setPeriod(state=>({...state, startDate: e.target.value}))
         console.log('enddate')
     }
+    */
 
-    const handleSubmit = () =>{
+    const handleSubmit = (period) =>{
         dispatch(getApplications(period));
         console.log('period: ' + period)
     }
@@ -33,14 +35,18 @@ export const ApplicationsList = () =>{
     <div>
            <p>To list all available candidates during a certain period, please
              provide us with the dates for that period.</p>
-
+      <Formik initialValues={{startDate: ' ', endDate: ' '}}
+              onSubmit={handleSubmit}>
+          <Form>
         <label >start date: </label>
-        <input name="startDate" type="date" onChange={addEnd}>
+        <Field name="startDate" type="date" />
       <div>
         <label> end date: </label>
-        <input name="endDate" type="date" onChange={addEnd}/>
+        <Field name="endDate" type="date" />
         </div>
-           <button type="submit" onSubmit={handleSubmit}>Submit</button>
+           <button type="submit">Submit</button>
+        </Form>
+        </Formik>
       {content &&
           (<div>
                  {content.map((item)=>{
@@ -48,5 +54,5 @@ export const ApplicationsList = () =>{
                  })}
                  </div>)
       }
-    </div>);
+  </div>);
 }

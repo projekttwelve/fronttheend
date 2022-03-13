@@ -2,11 +2,11 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
 import axios from 'axios';
 import userService from  '../../../../services/user.service';
 
-//const user = JSON.parse(localStorage.getItem("user"));
+const user = JSON.parse(localStorage.getItem("user"));
 
-export const getApplications = createAsyncThunk('recruiter/getApplications',async (thunkAPI, start, end) =>{
+export const getApplications = createAsyncThunk('recruiter/getApplications',async ( period,thunkAPI ) =>{
   try{
-    const res = await userService.getApplications(start, end);
+    const res = await userService.getApplications(period);
     return res;
   }catch(err){
    throw new Error(err)
@@ -14,7 +14,7 @@ export const getApplications = createAsyncThunk('recruiter/getApplications',asyn
   }
 })
 
-const initialState = {
+const initialState ={
   list: null,
   status: 'idle',
   errorMsg: ' ',
@@ -29,11 +29,11 @@ export const recruiterSlice = createSlice({
     },
     [getApplications.fulfilled]: (state, action)=>{
       state.status = 'success';
-      state.list = action.payload.data;
+      state.list = action.payload;
     },
     [getApplications.rejected]: (state, action)=>{
     state.status = 'error';
-      state.errorMsg = state.payload.data;
+    state.errorMsg = action.payload;
     }
   }
 })

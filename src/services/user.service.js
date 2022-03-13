@@ -22,12 +22,18 @@ const getCompetenceList = () =>{
 }
 
 const postApplication = async (appl) =>{
-  return await axios.post(  "https://obscure-tundra-74753.herokuapp.com/api/uploadApp",appl,
-                            { headers: authHeaderex()})
+  const res = await axios.post(  "https://obscure-tundra-74753.herokuapp.com/api/uploadApp",appl,
+                            { headers: authHeaderex()});
+
+  const user = JSON.parse(localStorage.getItem("user"));
+  localStorage.setItem("user", JSON.stringify( user + res.data))
+  return res;
 }
 
-const getApplications = (startDate, endDate) =>{
-  return axios.get(API_URL + "/api/available", { params: { startDate, endDate } })
+const getApplications = async({startDate, endDate}) =>{
+  const res = await axios.get(API_URL + `/api/available`,  {headers: authHeaderex(), params: { startDate, endDate }}
+                             )
+  return res.data.args;
 }
 
 const userService ={
