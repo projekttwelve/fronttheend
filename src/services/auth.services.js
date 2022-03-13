@@ -11,7 +11,7 @@ const API_URL = 'https://mycorsproxy123.herokuapp.com/https://obscure-tundra-747
 
 const signUp = async (info) =>{
  const res = await axios.post("https://mycorsproxy123.herokuapp.com/https://obscure-tundra-74753.herokuapp.com/api/ins", info)
-    return res.data;
+  return res.response.data;
 }
 
 const signIn = async (credentials) =>{
