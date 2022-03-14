@@ -38,10 +38,8 @@ const initialState = {
   list: null,
   status: 'idle',
   errorMsg: ' ',
-  posted:{
-    status: 'idle',
-    res: null
-  }
+  postedstatus: 'idle',
+  res: null
 }
 
 export const recruitSlice = createSlice({
@@ -61,15 +59,15 @@ export const recruitSlice = createSlice({
     }
   },
   [postApplication.pending]: (state, action)=>{
-    state.posted.status = "pending";
+    state.postedstatus = "pending";
   },
   [postApplication.fullfiled]: (state, action)=>{
-    state.posted.status = "success";
-    state.posted.res = action.payload.data;
+    state.postedstatus = "success";
+    state.res = action.payload.data;
   },
    [postApplication.rejected]: (state, action)=>{
-     state.posted.status = "rejected";
-    state.posted.res = action.payload.data;
+     state.postedstatus = "rejected";
+    state.res = action.payload.data;
   },
 })
 export const stateSelector = (state) => state.recruit;

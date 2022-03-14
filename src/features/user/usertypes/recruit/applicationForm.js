@@ -37,8 +37,10 @@ const state = useSelector(stateSelector);
       console.log(state.list)
     }else if(state.status == 'error'){
       setErrorMsg(state.errorMsg)
-    }if(state.posted.status == 'success'){
-      setMsg(state.posted.res)
+    }if(state.postedstatus == 'success'){
+      setMsg(state.res)
+    }if(state.postedstatus == 'rejected'){
+      setMsg(state.res)
     }
   },[setList. list, setErrorMsg]);
   /**
