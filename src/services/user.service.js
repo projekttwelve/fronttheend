@@ -25,8 +25,8 @@ const getRecruiterPage = ()=> {
  * @returns { array } containing different skills.
  * This is used to create check boxes and populate the applications view
  * */
-const getCompetenceList = () =>{
-    return axios.get(API_URL + "/api/competence/", {headers: authHeaderW()})
+const getCompetenceList = async () =>{
+    return await axios.get(API_URL + "/api/competence/", {headers: authHeaderW()})
 }
 /**
  * @function postApplication
@@ -38,7 +38,7 @@ const postApplication = async (appl) =>{
   const res = await axios.post(  "https://obscure-tundra-74753.herokuapp.com/api/uploadApp",appl,
                             { headers: authHeaderex()});
 
-  return res.data;
+  return res;
 }
 /**
  *@function getApplications

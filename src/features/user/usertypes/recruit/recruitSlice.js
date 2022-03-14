@@ -67,7 +67,7 @@ export const recruitSlice = createSlice({
   },
    [postApplication.rejected]: (state, action)=>{
      state.postedstatus = "rejected";
-    state.res = action.payload.data;
+     state.res = action.payload.response.data;
   },
 })
 export const stateSelector = (state) => state.recruit;
