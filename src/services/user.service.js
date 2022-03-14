@@ -38,8 +38,6 @@ const postApplication = async (appl) =>{
   const res = await axios.post(  "https://obscure-tundra-74753.herokuapp.com/api/uploadApp",appl,
                             { headers: authHeaderex()});
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  localStorage.setItem("user", JSON.stringify( user + res.data))
   return res;
 }
 /**
