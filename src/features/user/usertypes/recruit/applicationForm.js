@@ -5,6 +5,7 @@ import { Formik, Form, Field, FieldArray, ErrorMessage  } from 'formik';
 import { stateSelector } from './recruitSlice'
 import { PersonalInformation } from './PersonalInformation'
 import { getCompetenceList, postApplication } from './recruitSlice';
+import * as Yup from 'yup';
 /**
  *@Component
  * functional component that renders the applicationform
