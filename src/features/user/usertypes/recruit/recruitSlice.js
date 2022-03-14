@@ -25,7 +25,7 @@ export const getCompetenceList = createAsyncThunk('recruit/getCompetence',async 
  * @returns { string } confirmation message.
  * */
 
-export const postApplication = createAsyncThunk('recruit/poastApp', async(appl, thunkAPI)=>{
+export const postApplication = createAsyncThunk('recruit/postApp', async(appl, thunkAPI)=>{
   try{
     const res = await userService.postApplication(appl);
     return res;
@@ -59,7 +59,7 @@ export const recruitSlice = createSlice({
     }
   },
   [postApplication.pending]: (state, action)=>{
-    state.postedstatus = "pending";
+    state.postedstatus = "loading";
   },
   [postApplication.fullfiled]: (state, action)=>{
     state.postedstatus = "success";
