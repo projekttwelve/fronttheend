@@ -38,7 +38,7 @@ const postApplication = async (appl) =>{
   const res = await axios.post(  "https://obscure-tundra-74753.herokuapp.com/api/uploadApp",appl,
                             { headers: authHeaderex()});
 
-  return res;
+  return res.data;
 }
 /**
  *@function getApplications
