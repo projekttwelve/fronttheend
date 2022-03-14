@@ -65,12 +65,11 @@ export const recruitSlice = createSlice({
   },
   [postApplication.fullfiled]: (state, action)=>{
     state.posted.status = "success";
-    state.posted.res = state.payload.data;
-    state.posted.res = state.payload.data;
+    state.posted.res = action.payload.data;
   },
    [postApplication.rejected]: (state, action)=>{
     state.posted = "rejected";
-    state.posted.res = state.payload.data;
+    state.posted.res = action.payload.data;
   },
 })
 export const stateSelector = (state) => state.recruit;
