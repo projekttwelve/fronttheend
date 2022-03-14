@@ -3,13 +3,23 @@ import { Link, NavLink } from 'react-router-dom'
 import { useDispatch, useSelector} from 'react-redux';
 import { signInUser, userSelector, personSelector, logout } from '../user/UserSlice'
 
-
+/**
+ * @component
+ *
+ * a functional component that builds the navigation bar
+ * and renders the correct type of navbar depending on the user
+ * as well as the type of user that is logged in
+ * */
 export function Navbar (){
   const { isLoggedIn, res } = useSelector(userSelector);
   const [ loggedInNavBar, setLoggedInNavbar] = useState(false);
   const [ currentUser, setCurrentUser ] = useState(null);
 
   const dispatch = useDispatch();
+  /**
+   * @function useEffect is a hook that handles the React life-cycle
+   * we use it here to set the type of navbar.
+   * */
   useEffect(()=>{
     if(isLoggedIn){
       setLoggedInNavbar(true)
@@ -19,7 +29,10 @@ export function Navbar (){
       setCurrentUser(null);
     }
   },[isLoggedIn, setLoggedInNavbar, res])
-
+/**
+ *@function handleLogOut dispatches the logout
+ * function.
+ * */
   const handleLogOut = () =>{
     dispatch(logout());
   }

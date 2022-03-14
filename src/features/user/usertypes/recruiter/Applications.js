@@ -4,6 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getApplications, stateSelector } from './recruiterSlice';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from 'yup';
+/**
+ * @component
+ *
+ * a functional component that renders the list of applicants
+ * available during a specif time period.
+ * */
 export const ApplicationsList = () =>{
     const [content, setContent] = useState(null)
     const dispatch = useDispatch();
@@ -15,6 +21,11 @@ export const ApplicationsList = () =>{
                              (startDate, Yup)=>startDate &&
                              Yup.min(startDate, "The last date cannot be before the first date")).required("This field is required!"),
   });
+ /**
+  * @function UseEffekt
+  * a react hook for handling life-cycles.
+  * here we use it to set the content or an error message
+  * depending on the result of the request*/
     useEffect(()=>{
         if(status === 'success'){
             setContent(list)
@@ -23,7 +34,11 @@ export const ApplicationsList = () =>{
         }
     },[ content, setContent, status, list, ErrorMsg, setErrorMsg, errorMsg])
 
-
+  /**
+   * @function handleSubmit
+   * this function dispatches the getApplications
+   * actions that sends a request to the server.
+   * This is how we set the content*/
     const handleSubmit = (period) =>{
         dispatch(getApplications(period));
     }

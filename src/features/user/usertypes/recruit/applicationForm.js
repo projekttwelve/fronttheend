@@ -5,14 +5,29 @@ import { Formik, Form, Field, FieldArray } from 'formik';
 import { stateSelector } from './recruitSlice'
 import { PersonalInformation } from './PersonalInformation'
 import { getCompetenceList, postApplication } from './recruitSlice';
+import { Formik, Field, Form, ErrorMessage } from "formik";
+/**
+ *@Component
+ * functional component that renders the applicationform
+ * that is used to apply for work.
+ * */
 export const ApplicationForm = () =>{
 
 const [ErrorMsg, setErrorMsg] = useState(" ");
 const [list, setList] = useState([]);
 const dispatch = useDispatch()
 const navigate = useNavigate()
-const state = useSelector(stateSelector);
+const state = useSelector(stateSelector); const validationSchema = Yup.object().shape({
+    startDate: Yup.date().required("This field is required!"),
+    endDate: Yup.date().when("startDate",
+                             (startDate, Yup)=>startDate &&
+                             Yup.min(startDate, "The last date cannot be before the first date")).required("This field is required!"),
+  });
 
+  /** @function useEffect
+   * A react hook that handles React life-cycles, here
+   * it checks if user is logged in or not and handles
+   * setting skills list as well as setting error messages.*/
   useEffect(()=>{
     dispatch(getCompetenceList())
     if(state.status === 'success'){
@@ -22,6 +37,10 @@ const state = useSelector(stateSelector);
       setErrorMsg(state.errorMsg)
     }
   },[setList. list, setErrorMsg]);
+  /**
+   * @function handleSubmit
+   * handles the dispatching of postApplication
+   * function. supplies the form value.*/
   const handleSubmit = (values) =>{
     const jobslist =  list.map((job) => values.jobs.includes(job) ? job : " ").filter((job)=> job != " ");
     const exp = values.experience.filter((exp)=> exp != null);
@@ -48,7 +67,9 @@ const state = useSelector(stateSelector);
     experience: [],
     startDate: "",
     endDate: ""
-  }} onSubmit={handleSubmit}>
+  }}
+  validationSchema={validationSchema}
+  onSubmit={handleSubmit}>
       <Form>
         <div>experiences</div>
         <div>
@@ -78,11 +99,13 @@ const state = useSelector(stateSelector);
             </label>
     </div>
     </div>
-        <label >start date: </label>
+        <label htmlFor="startDate">start date: </label>
         <Field name="startDate" type="date"/>
+      <ErrorMessage name="startDate" className="alert alert-danger"/>
       <div>
-        <label> end date: </label>
+        <label htmlFor="endDate"> end date: </label>
         <Field name="endDate" type="date"/>
+      <ErrorMessage name="endDate" className="alert alert-danger"/>
       </div>
        <button type="submit">Submit</button>
       </Form>
@@ -90,8 +113,11 @@ const state = useSelector(stateSelector);
 
       </div>
 )
-  }else if(ErrorMsg){
-    return <p style={{color:'red'}} className="error"> {ErrorMsg} </p>
+  }else if(ErrorMsg && state.status === "success"){
+    return <p style={{color:'blue'}}> {ErrorMsg} </p>
+
+  }else if(ErrorMsg && state.status === "success"){
+    return <p style={{color:'blue'}}> {ErrorMsg} </p>
   }else{
     return <p>loading...</p>
   }

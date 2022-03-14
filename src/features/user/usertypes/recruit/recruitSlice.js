@@ -3,7 +3,12 @@ import axios from 'axios';
 import userService from  '../../../../services/user.service';
 
 const user = JSON.parse(localStorage.getItem("user"));
-
+/**
+ * @function getComptenceList
+ * async function that exaecutes the userSrvice
+ * function with the same name.
+ * @returns { array } with objects containng usernames
+ * */
 export const getCompetenceList = createAsyncThunk('recruit/getCompetence',async (thunkAPI) =>{
   try{
     const res = await userService.getCompetenceList();
@@ -13,6 +18,12 @@ export const getCompetenceList = createAsyncThunk('recruit/getCompetence',async 
     //  return thunkAPI.rejectWithValue(err)
   }
 })
+/**
+ * @function postApplication
+ *sends a POST request with autherization header,
+ * @param { object } contains application details.
+ * @returns { string } confirmation message.
+ * */
 
 export const postApplication = createAsyncThunk('recruit/poastApp', async(appl, thunkAPI)=>{
   try{
@@ -54,6 +65,7 @@ export const recruitSlice = createSlice({
   },
   [postApplication.fullfiled]: (state, action)=>{
     state.posted.status = "success";
+    state.posted.res = state.payload.data;
     state.posted.res = state.payload.data;
   },
    [postApplication.rejected]: (state, action)=>{

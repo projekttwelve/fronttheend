@@ -4,7 +4,11 @@ import { signInUser, userSelector } from '../UserSlice'
 import { useNavigate } from 'react-router-dom';
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
-
+/**
+ * @Component
+ *This is a functional component that renders the sign in view
+ * for users.
+ * */
 export function SignIn(){
   const [credentials, setCredentials] = useState({username: '', password:''});
   const [errorMsg, setErrorMsg]=useState('')
@@ -17,13 +21,19 @@ export function SignIn(){
     username: Yup.string().required("This field is required!"),
     password: Yup.string().required("This field is required!"),
   });
-
+/**
   const setUserName=(name)=>{
     setCredentials(state =>({...state, username: name}))
   }
   const setPassword=(passwd)=>{
     setCredentials(state =>({...state, password: passwd}))
   }
+  */
+
+  /** @function useEffect
+   * A react hook that handles React life-cycles, here
+   * it checks if user is logged in or not and handles
+   * navigation as well as setting error messages.*/
 
   useEffect(()=>{
     if(isLoggedIn){
@@ -35,7 +45,11 @@ export function SignIn(){
     }
 
   },[errorMsg, isLoggedIn, navigate, res, status])
-
+/**
+ *@function handleSubmit
+ * This function dispatches the singInUser function
+ * and it supplies it with credentials.
+ * */
   const handleSubmit =( formValue)=>{
     const   {username, password } = formValue;
     dispatch(signInUser( {username, password} ))
