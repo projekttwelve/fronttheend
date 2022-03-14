@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Formik, Form, Field, FieldArray } from 'formik';
+import { Formik, Form, Field, FieldArray, ErrorMessage  } from 'formik';
 import { stateSelector } from './recruitSlice'
 import { PersonalInformation } from './PersonalInformation'
 import { getCompetenceList, postApplication } from './recruitSlice';
-import { Formik, Field, Form, ErrorMessage } from "formik";
 /**
  *@Component
  * functional component that renders the applicationform
