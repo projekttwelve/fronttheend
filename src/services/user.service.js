@@ -26,7 +26,8 @@ const getRecruiterPage = ()=> {
  * This is used to create check boxes and populate the applications view
  * */
 const getCompetenceList = async () =>{
-    return await axios.get(API_URL + "/api/competence/", {headers: authHeaderW()})
+    const res = await axios.get(API_URL + "/api/competence/", {headers: authHeaderW()})
+  return res;
 }
 /**
  * @function postApplication
