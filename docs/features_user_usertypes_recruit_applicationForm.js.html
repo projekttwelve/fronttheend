@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>JSDoc: Source: features/user/UserSlice.js</title>
+    <title>JSDoc: Source: features/user/usertypes/recruit/applicationForm.js</title>
 
     <script src="scripts/prettify/prettify.js"> </script>
     <script src="scripts/prettify/lang-css.js"> </script>
@@ -17,7 +17,7 @@
 
 <div id="main">
 
-    <h1 class="page-title">Source: features/user/UserSlice.js</h1>
+    <h1 class="page-title">Source: features/user/usertypes/recruit/applicationForm.js</h1>
 
     
 
@@ -26,93 +26,136 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import axios from 'axios';
-import userService from  '../../services/user.service';
-import authService from '../../services/auth.services';
-
-const user = JSON.parse(localStorage.getItem("user"));
-
-export const signUpUser = createAsyncThunk('user/signUpUser',async (obj, thunkAPI) =>{
-  try{
-    const res = await authService.signUp(obj);
-    return res;
-  }catch(err){
-   // throw new Error('user already exists, try signing in or reset account')
-      return thunkAPI.rejectWithValue(err)
-  }
-})
-
-export const signInUser = createAsyncThunk('user/signInUser',async(credentials, thunkAPI)=>{
-  try{
-    const res = await authService.signIn(credentials);
-    return res;
-  }catch(err){
-    return thunkAPI.rejectWithValue(err);
-  }
-});
-
+            <pre class="prettyprint source linenums"><code>import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { Formik, Form, Field, FieldArray, ErrorMessage  } from 'formik';
+import { stateSelector } from './recruitSlice'
+import { PersonalInformation } from './PersonalInformation'
+import { getCompetenceList, postApplication } from './recruitSlice';
+import * as Yup from 'yup';
 /**
- *  removes the jwt token stored in localStorage
+ *@Component
+ * functional component that renders the applicationform
+ * that is used to apply for work.
  * */
-export const logout = createAsyncThunk("user/logout", async() =>{
-  await authService.logout()
-});
+export const ApplicationForm = () =>{
 
-const initialState = user ?
-      {isLoggedIn: true, res : user,  status: 'idle'} :
-      {isLoggedIn: false, res: null, status: 'idle'}
+const [ErrorMsg, setErrorMsg] = useState(" ");
+const [list, setList] = useState([]);
+const [msg, setMsg] = useState('');
+const dispatch = useDispatch()
+const navigate = useNavigate()
+const state = useSelector(stateSelector);
+  const validationSchema = Yup.object().shape({
+    startDate: Yup.date().required("This field is required!"),
+    endDate: Yup.date().when("startDate",
+                             (startDate, Yup)=>startDate &amp;&amp;
+                             Yup.min(startDate, "The last date cannot be before the first date")).required("This field is required!"),
+  });
 
-/**
- * This function creates userSlice. This function creates
- * the reducer and actions associated with the reducers.
- * extraReducers: handles the async reducer logic.
- */
-export const userSlice = createSlice({
-  name: 'user',
-  initialState,
-  reducers:{
-    clearState: (state) =>{
-      state.status = 'idle';
+  /** @function useEffect
+   * A react hook that handles React life-cycles, here
+   * it checks if user is logged in or not and handles
+   * setting skills list as well as setting error messages.*/
+  useEffect(()=>{
+    dispatch(getCompetenceList())
+    if(state.status === 'success'){
+      setList(state.list)
+      console.log(state.list)
+    }else if(state.status == 'error'){
+      setErrorMsg(state.errorMsg)
+    }if(state.postedstatus == 'success'){
+      setMsg(state.res)
+    }if(state.postedstatus == 'rejected'){
+      setMsg(state.res)
     }
-  },
-  extraReducers:{
-       [signUpUser.pending]: (state, action)=>{
-        state.status = 'loading';
-      },
-      [signUpUser.fulfilled]:(state, action)=>{
-        state.status = 'success';
-        state.res = action.payload;
-         state.isLoggedIn = false;
-      },
-      [signUpUser.rejected]:(state, action)=>{
-        state.res = action.payload.response.data;
-        state.status = 'error';
-      },
-    [signInUser.pending]:(state, action)=>{
-      state.status = 'loading';
-    },
-    [signInUser.fulfilled]:(state, action)=>{
-      state.status = 'success';
-      state.res = action.payload;
-      state.isLoggedIn = true;
-    },
-    [signInUser.rejected]:(state, action)=>{
-      state.status = 'error';
-      state.res = action.payload.response.data;
-      state.isLoggedIn = false;
-    },
-    [logout.fulfilled]: (state, action)=>{
-      state.isLoggedIn = false;
-      state.res = null;
+  },[setList. list, setErrorMsg, setMsg, msg]);
+  /**
+   * @function handleSubmit
+   * handles the dispatching of postApplication
+   * function. supplies the form value.*/
+  const handleSubmit = (values) =>{
+    const jobslist =  list.map((job) => values.jobs.includes(job) ? job : " ").filter((job)=> job != " ");
+    const exp = values.experience.filter((exp)=> exp != null);
+
+    const res = {
+      jobs:jobslist,
+      experience: exp,
+      startDate: values.startDate,
+      endDate: values.endDate
     }
+    //alert(JSON.stringify(res, null, 2))
+    dispatch(postApplication(res));
   }
-});
 
-export const userSelector = (state) => state.user;
-export const personSelector = (state) => state.user.res.person;
-export const { clearState } = userSlice.actions;
-export default userSlice.reducer;
+  if(list &amp;&amp; state.status === "success"){
+  return(
+  &lt;div>
+    &lt;h1>Application Form: &lt;/h1>
+    &lt;h2>Personal information:&lt;/h2>
+    &lt;PersonalInformation/>
+    &lt;h2>Competens profile: &lt;/h2>
+  &lt;Formik initialValues={{
+    jobs: [],
+    experience: [],
+    startDate: "",
+    endDate: ""
+  }}
+  validationSchema={validationSchema}
+  onSubmit={handleSubmit}>
+      &lt;Form>
+        &lt;div>experiences&lt;/div>
+        &lt;div>
+            &lt;label>
+    &lt;Field  type="checkbox" name="jobs" value="ticket sales"/>
+              {list[0]}
+            &lt;/label>
+          &lt;label> &amp;nbsp; years of experience
+              &lt;Field type="number"  name="experience[0]" />
+            &lt;/label>
+    &lt;/div>
+    &lt;div>
+            &lt;label>
+              &lt;Field type="checkbox" name="jobs" value="lotteries"/>
+               {list[1]}
+              &amp;nbsp; years of experience
+              &lt;Field type="number"  name="experience[1]"/>
+            &lt;/label>
+    &lt;div/>
+    &lt;div>
+            &lt;label>
+              &lt;Field type="checkbox" name="jobs" value="roller coaster operation" />
+              {list[2]}
+              &amp;nbsp; years of experience
+              &lt;Field type="number"  name="experience[2]" />
+
+            &lt;/label>
+    &lt;/div>
+    &lt;/div>
+        &lt;label htmlFor="startDate">start date: &lt;/label>
+        &lt;Field name="startDate" type="date"/>
+      &lt;ErrorMessage name="startDate" className="alert alert-danger"/>
+      &lt;div>
+        &lt;label htmlFor="endDate"> end date: &lt;/label>
+        &lt;Field name="endDate" type="date"/>
+      &lt;ErrorMessage name="endDate" className="alert alert-danger"/>
+      &lt;/div>
+       &lt;button type="submit">Submit&lt;/button>
+      &lt;/Form>
+  &lt;/Formik>
+
+      &lt;/div>
+)
+  }else if(ErrorMsg &amp;&amp; state.status === "success"){
+    return &lt;p style={{color:'blue'}}> {ErrorMsg} &lt;/p>
+
+  }else if(msg){
+    return &lt;p style={{color:'blue'}}> {msg} &lt;/p>
+  }else{
+    return &lt;p>loading...&lt;/p>
+  }
+}
 </code></pre>
         </article>
     </section>

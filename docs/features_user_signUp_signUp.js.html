@@ -30,6 +30,9 @@
 import {useSelector, useDispatch} from 'react-redux';
 import { signUpUser, userSelector } from './../UserSlice';
 import { useNavigate } from 'react-router-dom';
+import { Formik, Field, Form, ErrorMessage, FormikProvider } from "formik";
+import * as Yup from "yup";
+
 //@ts-check
 
 /**
@@ -43,158 +46,142 @@ import { useNavigate } from 'react-router-dom';
 export function SignUp(){
   const [user, setUser] = useState(()=>{
     return {
-      name: ' ',
-      surname: ' ',
-      pnr: ' ',
-      email: ' ',
-      password: ' ',
-      role_id: 1,
-      username: ' ',
+      name: '',
+      surname: '',
+      pnr: '',
+      email: '',
+      password: '',
+      username: '',
     }
   });
   const [errorMsg, setErrorMsg] = useState('');
   const dispatch = useDispatch();
   const { status, res } = useSelector(userSelector);
   const navigate = useNavigate();
-/**
- * function that will add the name to the state-hook object.
- * @param { uName } the function the user supplies */
-const setUserName=(uName)=>{
-    setUser(prevState =>({
-      ...prevState,
-      username : uName
-    }));
-  }
-/**
- * function that will add the password to the state-hook object.
- * @param { passwd } the function the user supplies
- * */
-  
-  const setPassword=(passwd)=>{
-     setUser(prevState =>({
-      ...prevState,
-      password: passwd
-    }));
-  }
-/**
- * function that will add the password to the state-hook object.
- * @param { passwd } the function the user supplies
- * */
-  const setPID =(pid)=>{
-   setUser(prevState =>({
-     ...prevState,
-     pnr: pid
-   }));
-  }
-/**
- * function that will add the email to the state-hook object.
- * @param { mail } the function the user supplies
- * */
-  const setMail=(mail)=>{
-     setUser(prevState =>({
-     ...prevState,
-     email: mail
-   }));
-  }
 
   /**
- * function that will add the role (recruiter or recruit) to the state-hook object.
- * @param { role } the function the user supplies
- * */
-  const setRole=(role)=>{
-     setUser(prevState =>({
-     ...prevState,
-       role_id: parseInt(role)
-     }));
+   * @function required
+   * alerts user that a field is required
+   * */
+const required = value => {
+  if (!value) {
+    return (
+      &lt;div className="alert alert-danger" role="alert">
+        This field is required!
+      &lt;/div>
+    );
   }
-
- /**
-  * function that will add the name to the state-hook object.
-  * @param { name } the function the user supplies
- */
-  const setName=(name)=>{
-   setUser(prevState =>({
-     ...prevState,
-     name: name
-   }));
-  }
-  /**
-  * function that will add the surname to the state-hook object.
-  * @param { SName } the function the user supplies
- */
-  const setSurName=(SName)=>{
-     setUser(prevState =>({
-     ...prevState,
-     surname : SName
-   }));
-  }
-/**
- * useEffect hook, replaces componentWillUpdate and ComponentWillMount
- * in the dependency array we have status and errorMsg, as soon as one
- * changes the view will re-render.
- */
-  useEffect(()=>{
+};
+useEffect(()=>{
     if(status === 'success'){
-      navigate("/UserRecruit")
+      setErrorMsg('');
+      navigate("/SignIn")
     }else if(status === 'error'){
       setErrorMsg(res)
     }
   },[status, errorMsg])
-
   //TODO: make sure button is only clickable if we filled all values
-  // TODO:https://www.npmjs.com/package/react-validation
+  const validationSchema = Yup.object().shape({
+    username: Yup.string().required("This field is required!"),
+    password: Yup.string().required("This field is required!"),
+    name: Yup.string().required("This field is required!"),
+    surname: Yup.string().required("This field is required!"),
+      pnr: Yup.number().test("len", "the social security number needts to be 12 digits.",
+                             (val)=> val &amp;&amp; val.toString().length === 12)
+              .required("This field is required!"),
+    email: Yup.string().email("This is not a valid email.")
+              .required("This field is required!"),
+  });
+
+ 
 /**
  * a function that will dispatch the action to sign-up the user.
  */
-  const handleSubmit =()=>{
- dispatch(signUpUser(user))
+  const handleSubmit =(formValue)=>{
+    //e.preventDefault();
+    const { name,
+      surname,
+      pnr,
+      email,
+      password,
+      username} = formValue;
+    dispatch(signUpUser( { name,
+      surname,
+      pnr,
+      email,
+      password,
+      username,
+      role_id: 2
+                         }))
+
   }
 
   return(
 &lt;div>&lt;p>Signup here&lt;/p>
-  &lt;form>
-    &lt;label>
-      Username:
-      &lt;input type='text' name='username' value={user.userName}  onChange={(e)=>{setUserName(e.target.value)}}/>
-     &lt;/label>
-    &lt;label>
-      password:
-      &lt;input type='password' name='password' value={user.passWord}  onChange={(e)=>{setPassword(e.target.value)}}/>
-    &lt;/label>
+ &lt;Formik
+          initialValues={user}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+   &lt;Form>
+     &lt;div>
+       &lt;label htmlFor="username" >
+         Username:
+       &lt;/label>
+      &lt;Field type='text' name='username'/>
+      &lt;ErrorMessage name="username"
+                    className="alert alert-danger"/>
+     &lt;/div>
+     &lt;div>
+       &lt;label htmlFor="password">
+         password:
+       &lt;/label>
+       &lt;Field name="password" type="password" />
+       &lt;ErrorMessage name="password" className="alert alert-danger" />
+     &lt;/div>
+     &lt;div>
+       &lt;label>
+         social security number:
+       &lt;/label>
+       &lt;Field type='number'
+              name="pnr"/>
+       &lt;ErrorMessage name="pnr" className="alert alert-danger" />
+       &lt;br/>
+     &lt;/div>
+     &lt;div>
+       &lt;label htmlFor="email">Email: &lt;/label>
+                  &lt;Field name="email" type="email"  />
+                  &lt;ErrorMessage
+                    name="email"
+                    className="alert alert-danger"
+                  />
+        &lt;br/>
+     &lt;/div>
+     &lt;div>
+       &lt;label>
+         name:
+       &lt;/label>
+       &lt;Field type='text' name='name'/>
+      &lt;ErrorMessage name="name" className="alert alert-danger" />
+     &lt;/div>
+     &lt;div>
+       &lt;label>
+         surname:
+       &lt;/label>
+      &lt;Field type='text' name='surname'/>
+      &lt;ErrorMessage name="surname"
+                    className="alert alert-danger" />
       &lt;br/>
-    &lt;label>
-        social security number:
-      &lt;input type='number' required={12} value={user.PID} onChange={(e)=>{setPID(e.target.value)}}/>
-     &lt;/label>
-    &lt;label htmlFor='email'>
-      email:
-      &lt;input type='email' value={user.email}  onChange={(e)=>{setMail(e.target.value)}}/>
-      &lt;br/>
-    &lt;/label>
-    &lt;label>
-      name:
-      &lt;input type='text'  value={user.name} onChange={(e)=>{setName(e.target.value)}}/>
-     &lt;/label>
-    &lt;label>
-      surname:
-      &lt;input type='text'  value={user.SName} onChange={(e)=>{setSurName(e.target.value)}}/>
-    &lt;/label>
-      &lt;br/>
-    &lt;select name="role" value={user.role} onChange={(e)=>{setRole(e.target.value)}}>
-      role:
-      &lt;option value="1">recruit&lt;/option>
-      &lt;option value="2">recruiter&lt;/option>
-     &lt;/select>
-
-  &lt;/form>
-  &lt;button onClick={handleSubmit}>
+     &lt;/div>
+     &lt;button className="button" type="submit" >
       Sign up!
     &lt;/button>
+  &lt;/Form>
+&lt;/Formik>
 {errorMsg &amp;&amp; (
   &lt;p style={{color:'red'}} className="error"> {errorMsg} &lt;/p>
 )}
 &lt;/div>);
-
 }
 </code></pre>
         </article>
@@ -206,13 +193,54 @@ const setUserName=(uName)=>{
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#App">App</a></li><li><a href="global.html#initialState">initialState</a></li><li><a href="global.html#SignUp">SignUp</a></li><li><a href="global.html#signUpUser">signUpUser</a></li><li><a href="global.html#store">store</a></li><li><a href="global.html#userSlice">userSlice</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#API_URL">API_URL</a></li><li><a href="global.html#App">App</a></li><li><a href="global.html#ApplicationForm">ApplicationForm</a></li><li><a href="global.html#ApplicationsList">ApplicationsList</a></li><li><a href="global.html#authHeaderisaservicethatwillbeusedtocheckwetherauserhasauthorizationtoaccesscertainresourses.checkinlocalstorage,ifthereisaloggedinuserreturnHTTPauthorization,elsereturnemptyobject.">authHeader is a service that will be used
+to check wether a user has authorization to access certain
+resourses.
+
+check in local storage, if there is a logged in user
+return HTTP authorization, else return empty object.</a></li><li><a href="global.html#getApplicationsThismethodisusedtopopulatethe%2522applicationlist%2522viewfortherecruiter.">getApplications
+This method is used to populate the "application list"
+view for the recruiter.</a></li><li><a href="global.html#getCompetenceListThisfunctionexecutesagetrequestwithauthorizationheaders.">getCompetenceList
+This function executes a get request with authorization headers.</a></li><li><a href="global.html#getComptenceListasyncfunctionthatexaecutestheuserSrvicefunctionwiththesamename.">getComptenceList
+async function that exaecutes the userSrvice
+function with the same name.</a></li><li><a href="global.html#handleLogOutdispatchesthelogoutfunction.">handleLogOut dispatches the logout
+function.</a></li><li><a href="global.html#handleSubmithandlesthedispatchingofpostApplicationfunction.suppliestheformvalue.">handleSubmit
+handles the dispatching of postApplication
+function. supplies the form value.</a></li><li><a href="global.html#handleSubmitthisfunctiondispatchesthegetApplicationsactionsthatsendsarequesttotheserver.Thisishowwesetthecontent">handleSubmit
+this function dispatches the getApplications
+actions that sends a request to the server.
+This is how we set the content</a></li><li><a href="global.html#handleSubmitThisfunctiondispatchesthesingInUserfunctionanditsuppliesitwithcredentials.">handleSubmit
+This function dispatches the singInUser function
+and it supplies it with credentials.</a></li><li><a href="global.html#logout">logout</a></li><li><a href="global.html#logoutThisfunctionremovesanydatastoredinthelocalstorageandlogsouttheuser.">logout
+This function removes any data stored in the localstorage
+and logs out the user.</a></li><li><a href="global.html#Navbar">Navbar</a></li><li><a href="global.html#PersonalInformation">PersonalInformation</a></li><li><a href="global.html#postApplicationsendsaPOSTrequestwithautherizationheader,">postApplication
+sends a POST request with autherization header,</a></li><li><a href="global.html#requiredalertsuserthatafieldisrequired">required
+alerts user that a field is required</a></li><li><a href="global.html#SignIn">SignIn</a></li><li><a href="global.html#signInThisfunctionmakesaPOSTrequesttotheserverusingaxios.Thepurposeistoauthenticateandloginauser.">signIn
+This function makes a POST request
+to the server using axios. The purpose
+is to authenticate and log in a user.</a></li><li><a href="global.html#SignUp">SignUp</a></li><li><a href="global.html#signUpThisfunctionexecutesaPOSTrequestusingaxiostotheserver.Thisishowanewuseriscreated">signUp
+ This function executes a POST request using
+ axios to the server. This is how a new user is
+created</a></li><li><a href="global.html#store">store</a></li><li><a href="global.html#useEffectAreacthookthathandlesReactlife-cycles,hereitchecksifuserisloggedinornotandhandlesnavigationaswellassettingerrormessages.">useEffect
+A react hook that handles React life-cycles, here
+it checks if user is logged in or not and handles
+navigation as well as setting error messages.</a></li><li><a href="global.html#useEffectAreacthookthathandlesReactlife-cycles,hereitchecksifuserisloggedinornotandhandlessettingskillslistaswellassettingerrormessages.">useEffect
+A react hook that handles React life-cycles, here
+it checks if user is logged in or not and handles
+setting skills list as well as setting error messages.</a></li><li><a href="global.html#useEffectAreacthookthathandlesReactlife-cycles,hereitchecksifuserisloggedinornotandhandlessettinguserinthelocalstate.">useEffect
+A react hook that handles React life-cycles, here
+it checks if user is logged in or not and handles
+setting user in the local state.</a></li><li><a href="global.html#useEffectisahookthathandlestheReactlife-cycleweuseitheretosetthetypeofnavbar.">useEffect is a hook that handles the React life-cycle
+we use it here to set the type of navbar.</a></li><li><a href="global.html#UseEffektareacthookforhandlinglife-cycles.hereweuseittosetthecontentoranerrormessagedependingontheresultoftherequest">UseEffekt
+a react hook for handling life-cycles.
+here we use it to set the content or an error message
+depending on the result of the request</a></li><li><a href="global.html#userSlice">userSlice</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Wed Feb 09 2022 18:09:08 GMT+0100 (Central European Standard Time)
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.10</a> on Mon Mar 14 2022 21:05:31 GMT+0100 (Central European Standard Time)
 </footer>
 
 <script> prettyPrint(); </script>
