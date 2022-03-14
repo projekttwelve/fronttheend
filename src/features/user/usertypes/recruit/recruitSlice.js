@@ -56,8 +56,7 @@ export const recruitSlice = createSlice({
     [getCompetenceList.rejected]: (state, action)=>{
     state.status = 'error';
       state.errorMsg = action.payload.response.data;
-    }
-  },
+    },
   [postApplication.pending]: (state, action)=>{
     state.postedstatus = "loading";
   },
@@ -69,6 +68,6 @@ export const recruitSlice = createSlice({
      state.postedstatus = "rejected";
      state.res = action.payload.response.data;
   },
-})
+  }})
 export const stateSelector = (state) => state.recruit;
 export default recruitSlice.reducer;
