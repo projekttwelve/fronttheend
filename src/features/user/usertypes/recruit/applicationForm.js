@@ -15,9 +15,11 @@ export const ApplicationForm = () =>{
 
 const [ErrorMsg, setErrorMsg] = useState(" ");
 const [list, setList] = useState([]);
+const [msg, setMsg] = useState('');
 const dispatch = useDispatch()
 const navigate = useNavigate()
-const state = useSelector(stateSelector); const validationSchema = Yup.object().shape({
+const state = useSelector(stateSelector);
+  const validationSchema = Yup.object().shape({
     startDate: Yup.date().required("This field is required!"),
     endDate: Yup.date().when("startDate",
                              (startDate, Yup)=>startDate &&
@@ -35,6 +37,8 @@ const state = useSelector(stateSelector); const validationSchema = Yup.object().
       console.log(state.list)
     }else if(state.status == 'error'){
       setErrorMsg(state.errorMsg)
+    }if(state.posted.status == 'success'){
+      setMsg(state.posted.res)
     }
   },[setList. list, setErrorMsg]);
   /**
@@ -116,8 +120,8 @@ const state = useSelector(stateSelector); const validationSchema = Yup.object().
   }else if(ErrorMsg && state.status === "success"){
     return <p style={{color:'blue'}}> {ErrorMsg} </p>
 
-  }else if(ErrorMsg && state.status === "success"){
-    return <p style={{color:'blue'}}> {ErrorMsg} </p>
+  }else if(msg){
+    return <p style={{color:'blue'}}> {msg} </p>
   }else{
     return <p>loading...</p>
   }
