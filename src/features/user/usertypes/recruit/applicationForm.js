@@ -42,7 +42,7 @@ const state = useSelector(stateSelector);
     }if(state.postedstatus == 'rejected'){
       setMsg(state.res)
     }
-  },[setList. list, setErrorMsg]);
+  },[setList. list, setErrorMsg, setMsg, msg]);
   /**
    * @function handleSubmit
    * handles the dispatching of postApplication
